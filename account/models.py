@@ -42,8 +42,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_graduate = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
-    #avatar = models.ImageField(upload_to='avatars/', blank=True)
-
 
     USERNAME_FIELD = 'email'
     EMAIL_FIELD = 'email'
