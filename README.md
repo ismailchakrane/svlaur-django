@@ -2,7 +2,7 @@
 
 This is the backend part of a website for managing graduates of the ENSAM Rabat School using Django framework
 
-## Recommended IDE Setup
+## Recommended IDE
 
 [VSCode](https://code.visualstudio.com/)
 
