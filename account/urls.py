@@ -12,4 +12,8 @@ urlpatterns = [
     path('update/<uuid:pk>/', api.update_user, name='update_user'),
     path('login/', TokenObtainPairView.as_view(), name='token_obtain'),
     path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('graduates_per_major/', api.graduates_per_major, name='graduates_per_major'),
+    path('percentage_of_grad_workers/', api.percentage_of_grad_workers, name='percentage_of_grad_workers'),
+
+    
     ]

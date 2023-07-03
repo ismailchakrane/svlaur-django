@@ -4,6 +4,8 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 from .forms import SignupForm
 from django.contrib.auth.hashers import make_password
 from .models import User
+from django.db.models import Count
+
 
 
 @api_view(['GET'])
@@ -168,3 +170,61 @@ def update_user(request, pk):
 
     except User.DoesNotExist:
         return JsonResponse({'error': 'Offer not found'}, status=404, safe=False)
+    
+
+@api_view(['GET'])
+def graduates_per_major(request):
+    graduates_per_major = (
+        User.objects
+        .filter(is_graduate=True,is_admin=False)
+        .values('major')
+        .annotate(grad_per_major=Count('id'))
+        .order_by()
+    )
+
+
+    if len(graduates_per_major) == 0:
+        return JsonResponse(None, safe=False)
+
+    majors = []
+    for data in graduates_per_major :
+        majors.append(data['major'])
+
+    grads_per_major = []
+    for data in graduates_per_major :
+        grads_per_major.append(data['grad_per_major'])
+
+    response_data = {
+        'majors' : majors,
+        'grads_per_major' : grads_per_major,
+    }
+
+    return JsonResponse(response_data, safe=False)
+
+
+@api_view(['GET'])
+def percentage_of_grad_workers(request):
+
+    has_job_counts = (
+        User.objects
+        .filter(is_graduate=1, is_admin=0, job_title__isnull=False)
+        .aggregate(count=Count('id'))
+    )
+
+    no_job_counts = (
+        User.objects
+        .filter(is_graduate=1, is_admin=0, job_title__isnull=True)
+        .aggregate(count=Count('id'))
+    )
+
+    has_job = has_job_counts['count'] if has_job_counts['count'] is not None else 0
+    no_job = no_job_counts['count'] if no_job_counts['count'] is not None else 0
+    
+    print("numbers", has_job, no_job)
+    
+    response_data = {
+        'numbers' : [has_job, no_job],
+    }
+
+    return JsonResponse(response_data, safe=False)
+
