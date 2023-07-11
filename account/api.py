@@ -65,8 +65,8 @@ def signup(request):
 
 @api_view(['GET'])
 def get_graduates(request):
-    graduates_users = User.objects.filter(is_graduate=True, is_admin=False) 
-
+    graduates_users = User.objects.filter(is_graduate=True, is_admin=False).order_by('-date_joined')
+    
     if len(graduates_users) == 0:
         return JsonResponse(None, safe=False)
 
@@ -91,7 +91,7 @@ def get_graduates(request):
 
 @api_view(['GET'])
 def get_users(request):
-    users = User.objects.filter(is_admin=False)
+    users = User.objects.filter(is_admin=False).order_by('-date_joined')
 
     if len(users) == 0:
         return JsonResponse(None, safe=False)
@@ -217,8 +217,9 @@ def percentage_of_grad_workers(request):
         .aggregate(count=Count('id'))
     )
 
-    has_job = has_job_counts['count'] if has_job_counts['count'] is not None else 0
-    no_job = no_job_counts['count'] if no_job_counts['count'] is not None else 0
+    total =  int(has_job_counts['count'])  + int(no_job_counts['count']) 
+    has_job = (int(has_job_counts['count'])  / total) * 100 if int(has_job_counts['count']) > 0  else 0
+    no_job = (int(no_job_counts['count'])  / total ) * 100 if int(no_job_counts['count']) > 0 else 0
     
     print("numbers", has_job, no_job)
     

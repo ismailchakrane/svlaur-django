@@ -87,7 +87,7 @@ def get_offer(request, pk):
 
 @api_view(['GET'])
 def get_offers(request):
-    offers = Offer.objects.filter(is_verified=False)
+    offers = Offer.objects.filter(is_verified=False).order_by('-date_created')
 
     if len(offers) == 0:
         return JsonResponse(None, safe=False)
