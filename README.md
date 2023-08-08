@@ -10,7 +10,6 @@ This is the backend part of a website for managing graduates of the ENSAM Rabat 
 ## Project Setup
 
 ```sh
-npm install
 pip install djangorestframework
 pip install djangorestframework-simplejwt 
 pip install pillow
